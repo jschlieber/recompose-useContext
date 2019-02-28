@@ -6,10 +6,26 @@ import "./styles.css";
 
 const MyContext = createContext({});
 
-const PrintContext = () => {
+const PrintContext = ({ count, increment }) => {
   const myContext = useContext(MyContext);
-  return <div>{myContext.foo}</div>;
+  return (
+    <>
+      <div>
+        {myContext.foo} {count}
+      </div>
+      <button onClick={increment}>Increment</button>
+    </>
+  );
 };
+
+const enhance = withStateHandlers(
+  { count: 0 },
+  {
+    increment: ({ count }) => () => ({ count: count + 1 })
+  }
+);
+
+const PrintContextWithCount = enhance(PrintContext);
 
 function App() {
   return (
@@ -17,7 +33,7 @@ function App() {
       <div className="App">
         <h1>Hello CodeSandbox</h1>
         <h2>Start editing to see some magic happen!</h2>
-        <PrintContext />
+        <PrintContextWithCount />
       </div>
     </MyContext.Provider>
   );
